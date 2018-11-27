@@ -1,124 +1,150 @@
 #include <stdio.h>
-#include <locale.h>
- int main(void){
-     setlocale(LC_ALL,"Ukrainian");
- printf("Введіть розмір множин: \n");
- int lenth;
- scanf("%d",&lenth);
- int nam;
- char mnA[100];
- char mnB[100];
- int potA = 0;
- int potB = 0;
- int aa, bb;
- for(int m = 0; m<lenth; m++){
-     printf("Символ %d для множини А: ",m);
-     scanf("%s", &mnA[m]);
-     printf("\n");
-   }
- for(int n = 0; n<lenth; n++){
-     printf("Символ %d для множини В: ", n);
-     scanf("%s", &mnB[n]);
-      printf("\n");
+#include <cs50.h>
+
+int main()
+{
+    int n = 100;
+    int A[n];
+    int B[n];
+
+    // matrix
+    int C[n][n];
+
+    do
+    {
+        printf("Enter the number of elements in A and B: ");
+        n = GetInt();
+    } while (n < 1);
+
+    // initialisation of A and B
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("A[%d] = ", i + 1);
+        A[i] = GetInt();
+    }
+    for (int i = 0; i < n; i++)
+    {
+        printf("B[%d] = ", i + 1);
+        B[i] = GetInt();
     }
 
-    //Різниця множин
-    printf("Різниця множини А і В ={");
- for(int x = 0; x<lenth; x++){
-        nam = 0;
-   for(int y = 0; y<lenth; y++){
-        if(mnA[x]!=mnB[y]){
-        nam++;
-     }
-   }
-     if(nam == lenth){
-        printf("1,  ");
-     }else{
-         printf("0,  ");
-     }}
+    // matrix
 
-  printf("}\n");
-  printf("Різниця множини В і A ={");
- for(int x = 0; x<lenth; x++){
-        nam = 0;
-   for(int y = 0; y<lenth; y++){
-     if(mnB[x]!=mnA[y]){
-      nam++;
-      }
+    for (int i = 0; i < n; i++)
+    {
+        printf("| ");
+        for (int j = 0; j < n; j++)
+        {
+            if (2*B[j] + 1 > A[i])
+            {
+                C[i][j] = 1;
+                printf("%d ", C[i][j]);
+            }
+            else
+            {
+                C[i][j] = 0;
+                printf("%d ", C[i][j]);
+            }
+        }
+        printf("|");
+        printf("\n");
     }
-     if(nam == lenth){
-        printf("1,  ");
-     }else{printf("0,  ");}
-  }
 
-  //Доповнення множин
-  printf("}\n");
-  printf("Доповнення множини А  ={");
-     for(int x = 0; x<lenth; x++){
-        nam = 0;
-       for(int y = 0; y<lenth; y++){
-         if(mnB[x]!=mnA[y]){
-         nam++;
-     }
-   }
-      if(nam == lenth){
-        printf("1,  ");
-     }else{printf("0,  ");}
-  }
-  printf("}\n");
- printf("Доповнення множини B  ={");
+    // reflexivity
 
-  for(int x = 0; x<lenth; x++){
-        nam = 0;
-   for(int y = 0; y<lenth; y++){
-     if(mnA[x]!=mnB[y]){
-      nam++;
-     }
-   }
-     if(nam == lenth){
-        printf("1,  ");
-     }else{printf("0,  ");}
-  }
-
-  //Потужність множин
-  printf("}\n");
-   for(int x = 0; x<lenth; x++){
-      aa = 0;
-     for(int y = 0; y<lenth; y++){
-     if(mnA[x]!=mnA[y]){
-       aa++;
-       }
-     }
-     if(aa == lenth-1){
-        potA++;
-      }
+    for (int j = 0; j < n; j++)
+    {
+        if (C[j][j] != 1)
+        {
+            printf("Not reflexive");
+            break;
+        }
+        else if (j == n - 1)
+            printf("Reflexive");
     }
-    for(int x = 0; x<lenth; x++){
-        bb = 0;
-     for(int y = 0; y<lenth; y++){
-       if(mnB[x]!=mnB[y]){
-       bb++;
-         }
-       }
+    printf("\n");
 
-     if(bb == lenth -1){
-        potB++;
-      }
-   }
-   if(potA == lenth){
-    printf("Потужність множини А = %d\n",potA);
+    // antireflexivity
 
-   }
-    else{
-     potA++;
-     printf("Потужність множини А = %d\n",potA);
+    for (int j = 0; j < n; j++)
+    {
+        if (C[j][j] != 0)
+        {
+            printf("Not antireflexive");
+            break;
+        }
+        else if (j == n - 1)
+            printf("Antireflexive");
     }
-        if(potB == lenth){
-    printf("Потужність множини B = %d\n",potB);
+    printf("\n");
 
-   }
-    else{
-     potB++;
-     printf("Потужність множини B = %d\n",potB);
+    // symmetry
+
+    for (int i = 0, k = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (C[i][j] != C[j][i] && i != j)
+            {
+                k = 1;
+                printf("Not symmetic");
+                break;
+            }
+            else if (i == n - 1 && j == n - 1)
+                printf("Symmetric");
+        }
+        if (k)
+            break;
     }
- }
+    printf("\n");
+
+    // antisymmetry
+
+    for (int i = 0, l = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (C[i][j] == C[j][i] && i != j)
+            {
+                l = 1;
+                printf("Not antisymmetic");
+                break;
+            }
+            else if (i == n - 1 && j == n - 1)
+                printf("Antisymmetric");
+        }
+        if (l)
+            break;
+    }
+    printf("\n");
+
+    // transitivity
+
+    bool transitive = true;
+    bool antitransitive = true;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            for (int k = 0; k < n; k++)
+            {
+                if (j == k == i)
+                    continue;
+                transitive = transitive & (!C[i][j] || C[j][k] || C[i][k]);
+                antitransitive = antitransitive & (!C[i][j] || !C[j][k] || !C[i][k]);
+            }
+        }
+    }
+    if (transitive)
+        printf("Transitive\n");
+    else
+        printf("Not transitive\n");
+
+    if (antitransitive)
+        printf("Antitransitive\n");
+    else
+        printf("Not antitransitive\n");
+
+    return 0;
+}
